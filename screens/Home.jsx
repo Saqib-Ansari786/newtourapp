@@ -69,6 +69,7 @@ const CardList = () => {
             marginBottom: 3,
           }}
           height={250}
+          autoplay={true} // autoplay is used to autoplay the images and videos
         >
           {/* // pics is the data we want to display in which pics and videos are there. */}
           {pics.map((pic, index) => (
@@ -139,56 +140,62 @@ const CardList = () => {
             (
               card,
               index // map is used to loop through the data. Alternative for flatlist
-            ) => (
-              <TouchableOpacity // TouchableOpacity is used to make the card clickable
-                key={card.id} // key is used to identify the card
-                onPress={() =>
-                  // onPress is used to navigate to the DetailScreen
-                  navigation.navigate("CardDetail", {
-                    // Detail is the name of the screen we want to navigate to
-                    title: card.title, // title, image, and description are the data we want to pass to the DetailScreen
-                    description: card.description,
-                    image: card.image,
-                    id: card.id,
-                    gallery: card.gallery,
-                  })
-                }
-              >
-                <View // ImageBackground is used to display the image
-                  style={[
-                    styles.cardContainer,
-                    index % 2 === 0 ? styles.rightCard : styles.leftCard, // Swap the styles for even and odd index
-                  ]}
+            ) => {
+              const nextIndex = (index + 1) % cards.length; // Calculate the index of the next object in a circular manner
+              const nextCard = cards[nextIndex];
+              return (
+                <TouchableOpacity // TouchableOpacity is used to make the card clickable
+                  key={card.id} // key is used to identify the card
+                  onPress={() =>
+                    // onPress is used to navigate to the DetailScreen
+                    navigation.navigate("CardDetail", {
+                      // Detail is the name of the screen we want to navigate to
+                      title: card.title, // title, image, and description are the data we want to pass to the DetailScreen
+                      description: card.description,
+                      image: card.image,
+                      id: card.id,
+                      gallery: card.gallery,
+                      nextCard: nextCard,
+                      nextIndex: nextIndex,
+                    })
+                  }
                 >
-                  {/* // here we change the ImageBackground to Image so we wrap it from SharedElement*/}
-                  <Image
-                    source={{
-                      uri: "https://picsum.photos/seed/picsum/200/300",
-                    }}
-                    style={{
-                      width: "50%",
-                      height: 250,
-                      resizeMode: "cover",
-                      overflow: "hidden",
-                      borderRadius: 10,
-                    }}
-                  />
+                  <View // ImageBackground is used to display the image
+                    style={[
+                      styles.cardContainer,
+                      index % 2 === 0 ? styles.rightCard : styles.leftCard, // Swap the styles for even and odd index
+                    ]}
+                  >
+                    {/* // here we change the ImageBackground to Image so we wrap it from SharedElement*/}
+                    <Image
+                      source={{
+                        uri: "https://picsum.photos/seed/picsum/200/300",
+                      }}
+                      style={{
+                        width: "50%",
+                        height: 250,
+                        resizeMode: "cover",
+                        overflow: "hidden",
+                        borderRadius: 10,
+                      }}
+                    />
 
-                  {/* // cardContent is used to display the title and description */}
-                  <View style={styles.cardContent}>
-                    <View style={styles.cardPoint}>
-                      <Text style={styles.pointText}>{card.point}</Text>
+                    {/* // cardContent is used to display the title and description */}
+                    <View style={styles.cardContent}>
+                      <View style={styles.cardPoint}>
+                        <Text style={styles.pointText}>{card.point}</Text>
+                      </View>
+                      <Text style={styles.cardTitle}>{card.title}</Text>
+
+                      <Text style={styles.cardDescription}>
+                        {card.description}
+                      </Text>
                     </View>
-                    <Text style={styles.cardTitle}>{card.title}</Text>
-
-                    <Text style={styles.cardDescription}>
-                      {card.description}
-                    </Text>
                   </View>
-                </View>
-                <StatusBar />
-              </TouchableOpacity>
-            )
+                  <StatusBar />
+                </TouchableOpacity>
+              );
+            }
           )}
         </View>
       </ScrollView>

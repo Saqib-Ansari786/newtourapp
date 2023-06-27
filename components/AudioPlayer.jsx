@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from "react";
 import { StyleSheet, Text, View, TouchableOpacity } from "react-native";
-import * as DocumentPicker from "expo-document-picker";
 import { Audio } from "expo-av";
 import { Ionicons, MaterialCommunityIcons } from "@expo/vector-icons";
 import Slider from "@react-native-community/slider";
@@ -24,11 +23,7 @@ export default function App() {
   }, [audio]);
 
   const handleSelectAudio = async () => {
-    const { uri } = await DocumentPicker.getDocumentAsync({
-      // get audio file from device
-      type: "audio/*", // only audio files
-      copyToCacheDirectory: false, // don't copy to cache. Let it play from uri
-    });
+    const uri = "https://www.computerhope.com/jargon/m/example.mp3"; // Replace "YOUR_AUDIO_URI" with the actual URI of the audio file
 
     if (uri) {
       const { sound, status } = await Audio.Sound.createAsync(

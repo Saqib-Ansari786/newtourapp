@@ -4,7 +4,7 @@ import CardList from "./screens/Home";
 import CardDetail from "./screens/ItemScreen";
 import SplashScreen from "./screens/SplashScreen";
 import React from "react";
-import { Text, View } from "react-native";
+import { Linking, Text, View } from "react-native";
 import { createDrawerNavigator } from "@react-navigation/drawer";
 import { FontAwesome5, Ionicons, MaterialIcons } from "@expo/vector-icons";
 import RateScreen from "./screens/RateScreen";
@@ -20,6 +20,14 @@ const Drawer = createDrawerNavigator();
 const NavigatorOptions = {
   header: null,
 };
+const handleEmailPress = () => {
+  const email = "example@example.com";
+  const subject = "Hello from React Native App";
+  const mailtoUrl = `mailto:${email}?subject=${subject}`;
+
+  Linking.openURL(mailtoUrl);
+};
+
 function DrawerContent() {
   const navigation = useNavigation();
   const routes = [
@@ -60,7 +68,11 @@ function DrawerContent() {
             fontSize: 18,
             marginBottom: 25,
           }}
-          onPress={() => navigation.navigate(route.name)}
+          onPress={() =>
+            route.name == "Share"
+              ? Linking.openURL("https://www.example.com")
+              : navigation.navigate(route.name)
+          }
         >
           {route.icon == "award" || route.icon == "users" ? (
             <FontAwesome5 name={route.icon} size={20} color="white" />
@@ -80,7 +92,7 @@ function DrawerContent() {
       ></View>
       <Text
         style={{ color: "white", fontSize: 16, marginTop: 10 }}
-        onPress={() => navigation.navigate("Contact Us")}
+        onPress={handleEmailPress}
       >
         <MaterialIcons name="contact-support" size={20} color="white" />
         {"  "}

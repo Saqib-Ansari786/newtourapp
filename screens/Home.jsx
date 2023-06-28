@@ -204,12 +204,12 @@ const CardList = () => {
       <TouchableOpacity
         style={{
           position: "absolute",
-          left: "40%",
-          bottom: "50%",
-          backgroundColor: "rgba(0,0,0,0.3)",
-          paddingHorizontal: 20,
-          paddingVertical: 10,
-          borderRadius: 10,
+          left: "40%", // left is used to set the position of the button from left
+          bottom: "40%", // bottom is used to set the position of the button from bottom
+          backgroundColor: "rgba(0,0,0,0.3)", // backgroundColor is used to set the background color of the button
+          paddingHorizontal: 20, // paddingHorizontal is used to set the horizontal padding of the button
+          paddingVertical: 10, // paddingVertical is used to set the vertical padding of the button
+          borderRadius: 10, // borderRadius is used to give the button rounded corners
           flexDirection: "row",
         }}
         onPress={() => navigation.navigate("MapLocation")} // onPress is used to navigate to the MapLocation screen

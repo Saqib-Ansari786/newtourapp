@@ -11,6 +11,31 @@ export default function App() {
   const [duration, setDuration] = useState(0); // duration state variable to set duration of audio
 
   useEffect(() => {
+    const loadAudio = async () => {
+      const uri = "https://www.computerhope.com/jargon/m/example.mp3"; // Replace "YOUR_AUDIO_URI" with the actual URI of the audio file
+
+      if (uri) {
+        const { sound, status } = await Audio.Sound.createAsync(
+          { uri }, // source
+          { shouldPlay: true } // initial status: auto play the audio
+        );
+        setAudio(sound); // set audio object
+        setDuration(status.durationMillis); // set duration
+        setPosition(0); // reset position
+        setIsPlaying(true); // set isPlaying to true
+      }
+    };
+
+    loadAudio(); // load the audio when the component mounts
+
+    return () => {
+      if (audio) {
+        audio.unloadAsync(); // unload the audio when the component unmounts
+      }
+    };
+  }, []);
+
+  useEffect(() => {
     if (audio) {
       // if audio is set then set isPlaying to true
       const updatePosition = setInterval(async () => {
@@ -21,20 +46,6 @@ export default function App() {
       return () => clearInterval(updatePosition); // clear interval to avoid memory leaks
     }
   }, [audio]);
-
-  const handleSelectAudio = async () => {
-    const uri = "https://www.computerhope.com/jargon/m/example.mp3"; // Replace "YOUR_AUDIO_URI" with the actual URI of the audio file
-
-    if (uri) {
-      const { sound, status } = await Audio.Sound.createAsync(
-        { uri }, // source
-        { shouldPlay: isPlaying } // initial status
-      );
-      setAudio(sound); // set audio object
-      setDuration(status.durationMillis); // set duration
-      setPosition(0); // reset position
-    }
-  };
 
   const handlePlayPause = async () => {
     if (audio) {
@@ -58,11 +69,6 @@ export default function App() {
 
   return (
     <View style={styles.container}>
-      {/* // this button will open file picker to select audio file */}
-      <TouchableOpacity onPress={handleSelectAudio} style={{ padding: 10 }}>
-        <MaterialCommunityIcons name="select-all" size={24} color="black" />
-      </TouchableOpacity>
-
       {/* // this button will play/pause the audio */}
       <TouchableOpacity onPress={handlePlayPause} style={{ padding: 10 }}>
         {isPlaying ? (

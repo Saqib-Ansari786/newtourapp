@@ -4,7 +4,7 @@ import { Audio } from "expo-av";
 import { Ionicons, MaterialCommunityIcons } from "@expo/vector-icons";
 import Slider from "@react-native-community/slider";
 
-export default function App() {
+export default function App({ uri }) {
   const [audio, setAudio] = useState(null); // audio object
   const [isPlaying, setIsPlaying] = useState(false); // isPlaying state variable to check if audio is playing
   const [position, setPosition] = useState(0); // position state variable to set position of audio
@@ -12,8 +12,6 @@ export default function App() {
 
   useEffect(() => {
     const loadAudio = async () => {
-      const uri = "https://www.computerhope.com/jargon/m/example.mp3"; // Replace "YOUR_AUDIO_URI" with the actual URI of the audio file
-
       if (uri) {
         const { sound, status } = await Audio.Sound.createAsync(
           { uri }, // source

@@ -8,15 +8,9 @@ import Header from "../components/Header";
 import { cards } from "../data";
 import { useNavigation } from "@react-navigation/native";
 
-const pics = [
-  "https://images.unsplash.com/photo-1542831371-29b0f74f9713?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=870&q=80",
-  "https://picsum.photos/seed/picsum/200/300",
-  "https://picsum.photos/seed/picsum/200/300",
-  "https://picsum.photos/seed/picsum/200/300",
-];
-
 export default function CardDetail({ route }) {
-  const { video, title, description, id, nextCard, nextIndex } = route.params; // here we are getting the data from route.params
+  const { video, title, description, id, nextCard, nextIndex, gallery, audio } =
+    route.params; // here we are getting the data from route.params
   const navigation = useNavigation();
   const next1Index = (nextIndex + 1) % cards.length;
   const next1Card = cards[next1Index];
@@ -51,18 +45,19 @@ export default function CardDetail({ route }) {
         autoplay={true} // autoplay the swiper
       >
         {/* // swiper is used to display the images and videos */}
-        {pics.map((pic, index) => (
-          <View key={index}>
-            <Image
-              source={{ uri: pic }}
-              style={{
-                width: "100%",
-                height: 250,
-                resizeMode: "cover",
-              }}
-            />
-          </View>
-        ))}
+        {gallery &&
+          gallery.map((pic, index) => (
+            <View key={index}>
+              <Image
+                source={{ uri: pic }}
+                style={{
+                  width: "100%",
+                  height: 250,
+                  resizeMode: "cover",
+                }}
+              />
+            </View>
+          ))}
       </Swiper>
       <Header />
 
@@ -73,7 +68,7 @@ export default function CardDetail({ route }) {
       </View>
       <LineSeparator />
       <View>
-        <AudioPlayer />
+        <AudioPlayer uri={audio} />
       </View>
       <LineSeparator />
       <View style={{ padding: 20 }}>
@@ -112,7 +107,7 @@ export default function CardDetail({ route }) {
           }}
         >
           <Image // this is the image
-            source={{ uri: pics[0] }}
+            source={{ uri: nextCard.image }}
             style={{
               width: "90%", // width of the image
               height: 150,
@@ -124,25 +119,12 @@ export default function CardDetail({ route }) {
             style={{
               fontSize: 28, // font size
               color: "white", // color of the text
-              position: "absolute", // position of the text
-              bottom: 40, // bottom of the text
-              left: 40, // left of the text
+              bottom: 100, // bottom of the text
               letterSpacing: 2, // letter spacing
               fontWeight: "bold",
             }}
           >
             {nextCard.title}
-          </Text>
-          <Text
-            style={{
-              fontSize: 14,
-              color: "white",
-              position: "absolute",
-              bottom: 20,
-              left: 40,
-            }}
-          >
-            {nextCard.description}
           </Text>
         </View>
       </TouchableOpacity>
@@ -151,9 +133,6 @@ export default function CardDetail({ route }) {
 }
 
 const styles = StyleSheet.create({
-  container: {},
-  wrapper: {},
-  slide: {},
   image: {
     width: "100%",
     height: "100%",

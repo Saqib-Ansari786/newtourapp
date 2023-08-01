@@ -1,5 +1,5 @@
 import { StatusBar } from "expo-status-bar";
-import React from "react";
+import React, { useEffect, useState } from "react";
 import {
   StyleSheet,
   View,
@@ -13,6 +13,8 @@ import Swiper from "react-native-swiper";
 import { Feather, FontAwesome5, Ionicons } from "@expo/vector-icons";
 import { useNavigation } from "@react-navigation/native";
 import { Video } from "expo-av";
+import { db } from "../firebase";
+import { ref, onValue } from "firebase/database";
 
 const pics = [
   {
@@ -40,6 +42,18 @@ const pics = [
 const CardList = () => {
   // navigation is used to navigate between screens
   const navigation = useNavigation();
+  const [datalist, setDatalist] = useState();
+
+  useEffect(() => {
+    const dbRef = ref(db, "items/");
+    onValue(dbRef, (snapshot) => {
+      const data = snapshot.val();
+      const dataList = Object.values(data);
+      setDatalist(dataList);
+    });
+  }, []);
+  console.log(datalist);
+
   return (
     // ScrollView is used to make the content scrollable
     <View>
@@ -136,67 +150,68 @@ const CardList = () => {
             <Text style={styles.title}>Audio tour guide</Text>
             <FontAwesome5 name="headphones" size={24} color="grey" />
           </View>
-          {cards.map(
-            (
-              card,
-              index // map is used to loop through the data. Alternative for flatlist
-            ) => {
-              const nextIndex = (index + 1) % cards.length; // Calculate the index of the next object in a circular manner
-              const nextCard = cards[nextIndex];
-              return (
-                <TouchableOpacity // TouchableOpacity is used to make the card clickable
-                  key={card.id} // key is used to identify the card
-                  onPress={() =>
-                    // onPress is used to navigate to the DetailScreen
-                    navigation.navigate("CardDetail", {
-                      // Detail is the name of the screen we want to navigate to
-                      title: card.title, // title, image, and description are the data we want to pass to the DetailScreen
-                      description: card.description,
-                      image: card.image,
-                      id: card.id,
-                      gallery: card.gallery,
-                      nextCard: nextCard,
-                      nextIndex: nextIndex,
-                    })
-                  }
-                >
-                  <View // ImageBackground is used to display the image
-                    style={[
-                      styles.cardContainer,
-                      index % 2 === 0 ? styles.rightCard : styles.leftCard, // Swap the styles for even and odd index
-                    ]}
+          {datalist &&
+            datalist.map(
+              (
+                card,
+                index // map is used to loop through the data. Alternative for flatlist
+              ) => {
+                const nextIndex = (index + 1) % datalist.length; // Calculate the index of the next object in a circular manner
+                const nextCard = datalist[nextIndex];
+                return (
+                  <TouchableOpacity // TouchableOpacity is used to make the card clickable
+                    key={card.id} // key is used to identify the card
+                    onPress={() =>
+                      // onPress is used to navigate to the DetailScreen
+                      navigation.navigate("CardDetail", {
+                        // Detail is the name of the screen we want to navigate to
+                        title: card.title, // title, image, and description are the data we want to pass to the DetailScreen
+                        description: card.description,
+                        image: card.image,
+                        id: card.id,
+                        gallery: card.gallery,
+                        nextCard: nextCard,
+                        nextIndex: nextIndex,
+                        audio: card.audio,
+                      })
+                    }
                   >
-                    {/* // here we change the ImageBackground to Image so we wrap it from SharedElement*/}
-                    <Image
-                      source={{
-                        uri: "https://picsum.photos/seed/picsum/200/300",
-                      }}
-                      style={{
-                        width: "50%",
-                        height: 250,
-                        resizeMode: "cover",
-                        overflow: "hidden",
-                        borderRadius: 10,
-                      }}
-                    />
+                    <View // ImageBackground is used to display the image
+                      style={[
+                        styles.cardContainer,
+                        index % 2 === 0 ? styles.rightCard : styles.leftCard, // Swap the styles for even and odd index
+                      ]}
+                    >
+                      {/* // here we change the ImageBackground to Image so we wrap it from SharedElement*/}
+                      <Image
+                        source={{
+                          uri: card.image,
+                        }}
+                        style={{
+                          width: "50%",
+                          resizeMode: "cover",
+                          overflow: "hidden",
+                          borderRadius: 10,
+                        }}
+                      />
 
-                    {/* // cardContent is used to display the title and description */}
-                    <View style={styles.cardContent}>
-                      <View style={styles.cardPoint}>
-                        <Text style={styles.pointText}>{card.point}</Text>
+                      {/* // cardContent is used to display the title and description */}
+                      <View style={styles.cardContent}>
+                        <View style={styles.cardPoint}>
+                          <Text style={styles.pointText}>{card.position}</Text>
+                        </View>
+                        <Text style={styles.cardTitle}>{card.title}</Text>
+
+                        <Text style={styles.cardDescription}>
+                          {card.description}
+                        </Text>
                       </View>
-                      <Text style={styles.cardTitle}>{card.title}</Text>
-
-                      <Text style={styles.cardDescription}>
-                        {card.description}
-                      </Text>
                     </View>
-                  </View>
-                  <StatusBar />
-                </TouchableOpacity>
-              );
-            }
-          )}
+                    <StatusBar />
+                  </TouchableOpacity>
+                );
+              }
+            )}
         </View>
       </ScrollView>
 
@@ -228,10 +243,8 @@ const styles = StyleSheet.create({
   container: {},
   cardContainer: {
     width: "100%", // width is used to set the width of the card
-    height: 250, // height is used to set the height of the card
     borderRadius: 10, // borderRadius is used to give the card rounded corners
     marginBottom: 10, // marginBottom is used to give space between the cards
-    overflow: "hidden", // overflow is used to hide the content which is outside the card like border of card as it border radius applies to only image
     flexDirection: "row", // flexDirection is used to set the direction of the content
     paddingHorizontal: 10, // paddingHorizontal is used to give space between the content and the edge of the card
   },
@@ -244,7 +257,6 @@ const styles = StyleSheet.create({
   },
   cardContent: {
     padding: 10, // padding is used to give space between the content and the edge of the card
-    bottom: "40%", // bottom is used to set the position of the content of the card to the bottom
     alignSelf: "flex-end", // alignSelf is used to align the content to the left side
     width: "50%", // width is used to set the width of the content
   },

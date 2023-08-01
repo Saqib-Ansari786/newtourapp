@@ -7,13 +7,15 @@ import AudioPlayer from "../components/AudioPlayer";
 import Header from "../components/Header";
 import { cards } from "../data";
 import { useNavigation } from "@react-navigation/native";
+import { useSelector } from "react-redux";
 
 export default function CardDetail({ route }) {
   const { video, title, description, id, nextCard, nextIndex, gallery, audio } =
     route.params; // here we are getting the data from route.params
+  const { data } = useSelector((state) => state.data);
   const navigation = useNavigation();
-  const next1Index = (nextIndex + 1) % cards.length;
-  const next1Card = cards[next1Index];
+  const next1Index = (nextIndex + 1) % data.length;
+  const next1Card = data[next1Index];
   return (
     <ScrollView contentContainerStyle={styles.container}>
       {/* // this is the main container */}

@@ -13,6 +13,8 @@ import AboutScreen from "./screens/AboutScreen";
 import ConditionsScreen from "./screens/ConditionsScreen";
 import ContactUsScreen from "./screens/ContactUsScreen";
 import MapLocation from "./screens/MapLocation";
+import { Provider } from "react-redux";
+import store from "./store/store";
 
 const Stack = createSharedElementStackNavigator(); // this is changed from simple stack to shared element stack
 const Drawer = createDrawerNavigator();
@@ -141,13 +143,15 @@ function StackNavigator() {
 
 export default function App() {
   return (
-    <NavigationContainer>
-      <Drawer.Navigator
-        drawerContent={(props) => <DrawerContent {...props} />}
-        screenOptions={{ headerShown: false }}
-      >
-        <Drawer.Screen name="Main" component={StackNavigator} />
-      </Drawer.Navigator>
-    </NavigationContainer>
+    <Provider store={store}>
+      <NavigationContainer>
+        <Drawer.Navigator
+          drawerContent={(props) => <DrawerContent {...props} />}
+          screenOptions={{ headerShown: false }}
+        >
+          <Drawer.Screen name="Main" component={StackNavigator} />
+        </Drawer.Navigator>
+      </NavigationContainer>
+    </Provider>
   );
 }

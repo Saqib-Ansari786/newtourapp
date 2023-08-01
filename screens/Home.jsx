@@ -15,6 +15,7 @@ import { useNavigation } from "@react-navigation/native";
 import { Video } from "expo-av";
 import { db } from "../firebase";
 import { ref, onValue } from "firebase/database";
+import { useDispatch } from "react-redux";
 
 const pics = [
   {
@@ -43,16 +44,16 @@ const CardList = () => {
   // navigation is used to navigate between screens
   const navigation = useNavigation();
   const [datalist, setDatalist] = useState();
-
+  const dispatch = useDispatch();
   useEffect(() => {
     const dbRef = ref(db, "items/");
     onValue(dbRef, (snapshot) => {
       const data = snapshot.val();
       const dataList = Object.values(data);
       setDatalist(dataList);
+      dispatch({ type: "DATA", payload: dataList });
     });
   }, []);
-  console.log(datalist);
 
   return (
     // ScrollView is used to make the content scrollable

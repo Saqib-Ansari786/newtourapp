@@ -16,6 +16,7 @@ import { Video } from "expo-av";
 import { db } from "../firebase";
 import { ref, onValue } from "firebase/database";
 import { useDispatch } from "react-redux";
+import Card from "../components/Card";
 
 const pics = [
   {
@@ -160,56 +161,11 @@ const CardList = () => {
                 const nextIndex = (index + 1) % datalist.length; // Calculate the index of the next object in a circular manner
                 const nextCard = datalist[nextIndex];
                 return (
-                  <TouchableOpacity // TouchableOpacity is used to make the card clickable
-                    key={card.id} // key is used to identify the card
-                    onPress={() =>
-                      // onPress is used to navigate to the DetailScreen
-                      navigation.navigate("CardDetail", {
-                        // Detail is the name of the screen we want to navigate to
-                        title: card.title, // title, image, and description are the data we want to pass to the DetailScreen
-                        description: card.description,
-                        image: card.image,
-                        id: card.id,
-                        gallery: card.gallery,
-                        nextCard: nextCard,
-                        nextIndex: nextIndex,
-                        audio: card.audio,
-                      })
-                    }
-                  >
-                    <View // ImageBackground is used to display the image
-                      style={[
-                        styles.cardContainer,
-                        index % 2 === 0 ? styles.rightCard : styles.leftCard, // Swap the styles for even and odd index
-                      ]}
-                    >
-                      {/* // here we change the ImageBackground to Image so we wrap it from SharedElement*/}
-                      <Image
-                        source={{
-                          uri: card.image,
-                        }}
-                        style={{
-                          width: "50%",
-                          resizeMode: "cover",
-                          overflow: "hidden",
-                          borderRadius: 10,
-                        }}
-                      />
-
-                      {/* // cardContent is used to display the title and description */}
-                      <View style={styles.cardContent}>
-                        <View style={styles.cardPoint}>
-                          <Text style={styles.pointText}>{card.position}</Text>
-                        </View>
-                        <Text style={styles.cardTitle}>{card.title}</Text>
-
-                        <Text style={styles.cardDescription}>
-                          {card.description}
-                        </Text>
-                      </View>
-                    </View>
-                    <StatusBar />
-                  </TouchableOpacity>
+                  <Card
+                    card={{ ...card, nextCard, nextIndex }}
+                    index={index}
+                    navigation={navigation}
+                  />
                 );
               }
             )}

@@ -16,6 +16,7 @@ export default function CardDetail({ route }) {
   const navigation = useNavigation();
   const next1Index = (nextIndex + 1) % data.length;
   const next1Card = data[next1Index];
+  const [stopAudio, setStopAudio] = React.useState(false);
   return (
     <ScrollView contentContainerStyle={styles.container}>
       {/* // this is the main container */}
@@ -70,7 +71,7 @@ export default function CardDetail({ route }) {
       </View>
       <LineSeparator />
       <View>
-        <AudioPlayer uri={audio} />
+        <AudioPlayer uri={audio} stopAudio={stopAudio} />
       </View>
       <LineSeparator />
       <View style={{ padding: 20 }}>
@@ -84,7 +85,8 @@ export default function CardDetail({ route }) {
       {/* // this is the next location section */}
       <TouchableOpacity
         style={{ padding: 20 }}
-        onPress={() =>
+        onPress={() => {
+          setStopAudio(true);
           navigation.replace("CardDetail", {
             // Detail is the name of the screen we want to navigate to
             title: nextCard.title, // title, image, and description are the data we want to pass to the DetailScreen
@@ -94,8 +96,8 @@ export default function CardDetail({ route }) {
             gallery: nextCard.gallery,
             nextCard: next1Card,
             nextIndex: next1Index,
-          })
-        }
+          });
+        }}
       >
         {/* // this is the title */}
         <Text style={{ fontSize: 20, fontWeight: "bold" }}>Next Locations</Text>

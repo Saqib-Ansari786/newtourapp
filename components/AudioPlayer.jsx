@@ -4,7 +4,7 @@ import { Audio } from "expo-av";
 import { Ionicons, MaterialCommunityIcons } from "@expo/vector-icons";
 import Slider from "@react-native-community/slider";
 
-export default function App({ uri }) {
+export default function App({ uri, stopAudio }) {
   const [audio, setAudio] = useState(null); // audio object
   const [isPlaying, setIsPlaying] = useState(false); // isPlaying state variable to check if audio is playing
   const [position, setPosition] = useState(0); // position state variable to set position of audio
@@ -28,10 +28,10 @@ export default function App({ uri }) {
 
     return () => {
       if (audio) {
-        audio.unloadAsync(); // unload the audio when the component unmounts
+        setIsPlaying(false); // set isPlaying to false
       }
     };
-  }, []);
+  }, [uri]);
 
   useEffect(() => {
     if (audio) {

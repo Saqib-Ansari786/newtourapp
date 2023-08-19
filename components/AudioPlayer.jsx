@@ -15,7 +15,7 @@ export default function App({ uri, stopAudio }) {
       if (uri) {
         const { sound, status } = await Audio.Sound.createAsync(
           { uri }, // source
-          { shouldPlay: true } // initial status: auto play the audio
+          { shouldPlay: true, staysActiveInBackground: true } // initial status: auto play the audio and stay active in background
         );
         setAudio(sound); // set audio object
         setDuration(status.durationMillis); // set duration
@@ -45,6 +45,30 @@ export default function App({ uri, stopAudio }) {
     }
   }, [audio]);
 
+  const setAudioMode = async () => {
+    if (audio) {
+      await audio.setAudioModeAsync({ staysActiveInBackground: true });
+    }
+  };
+
+  useEffect(() => {
+    setAudioMode();
+  }, [audio]);
+
+  // Rest of your component code
+
+  useEffect(() => {
+    if (audio) {
+      if (stopAudio) {
+        audio.stopAsync(); // Stop audio if stopAudio is true
+        setIsPlaying(false);
+        setPosition(0);
+      }
+    }
+  }, [stopAudio]);
+
+  // Rest of your component code
+
   const handlePlayPause = async () => {
     if (audio) {
       if (isPlaying) {
@@ -62,6 +86,14 @@ export default function App({ uri, stopAudio }) {
     if (audio) {
       await audio.setPositionAsync(value); // seek audio to the position
       setPosition(value);
+    }
+  };
+
+  const handleStop = () => {
+    if (audio) {
+      audio.stopAsync();
+      setIsPlaying(false);
+      setPosition(0);
     }
   };
 
@@ -88,6 +120,9 @@ export default function App({ uri, stopAudio }) {
       <Text>
         {Math.floor(position / 1000)}s / {Math.floor(duration / 1000)}s
       </Text>
+      <TouchableOpacity onPress={handleStop} style={{ padding: 10 }}>
+        <MaterialCommunityIcons name="stop" size={24} color="black" />
+      </TouchableOpacity>
     </View>
   );
 }

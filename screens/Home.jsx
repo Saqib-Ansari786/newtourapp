@@ -17,6 +17,7 @@ import { db } from "../firebase";
 import { ref, onValue } from "firebase/database";
 import { useDispatch } from "react-redux";
 import Card from "../components/Card";
+import MusicPlayer from "../components/TrackPlayer";
 
 const pics = [
   {
@@ -152,6 +153,8 @@ const CardList = () => {
             <Text style={styles.title}>Audio tour guide</Text>
             <FontAwesome5 name="headphones" size={24} color="grey" />
           </View>
+          <MusicPlayer />
+
           {datalist &&
             datalist.map(
               (

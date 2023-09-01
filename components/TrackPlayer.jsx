@@ -98,14 +98,12 @@ function MusicPlayer() {
 
   useEffect(() => {
     setupPlayer();
+    return () => TrackPlayer.destroy();
   }, []);
 
   return (
     <SafeAreaView style={styles.container}>
       <View style={styles.mainContainer}>
-        <View style={styles.mainWrapper}>
-          <Image source={trackArtwork} style={styles.imageWrapper} />
-        </View>
         <View style={styles.songText}>
           <Text
             style={[styles.songContent, styles.songTitle]}
@@ -127,8 +125,8 @@ function MusicPlayer() {
             minimumValue={0}
             maximumValue={progress.duration}
             thumbTintColor="#FFD369"
-            minimumTrackTintColor="#FFD369"
-            maximumTrackTintColor="#fff"
+            minimumTrackTintColor="black"
+            maximumTrackTintColor="gray"
             onSlidingComplete={async (value) => await TrackPlayer.seekTo(value)}
           />
           <View style={styles.progressLevelDuraiton}>
@@ -146,7 +144,7 @@ function MusicPlayer() {
         </View>
         <View style={styles.musicControlsContainer}>
           <TouchableOpacity onPress={previoustrack}>
-            <Ionicons name="play-skip-back-outline" size={35} color="#FFD369" />
+            <Ionicons name="play-skip-back-outline" size={35} color="black" />
           </TouchableOpacity>
           <TouchableOpacity onPress={() => togglePlayBack(playBackState)}>
             <Ionicons
@@ -158,14 +156,14 @@ function MusicPlayer() {
                   : "ios-play-circle"
               }
               size={75}
-              color="#FFD369"
+              color="black"
             />
           </TouchableOpacity>
           <TouchableOpacity onPress={nexttrack}>
             <Ionicons
               name="play-skip-forward-outline"
               size={35}
-              color="#FFD369"
+              color="black"
             />
           </TouchableOpacity>
         </View>
@@ -180,11 +178,9 @@ const { width, height } = Dimensions.get("window");
 
 const styles = StyleSheet.create({
   container: {
-    flex: 1,
-    backgroundColor: "#222831",
+    color: "black",
   },
   mainContainer: {
-    flex: 1,
     alignItems: "center",
     justifyContent: "center",
   },
@@ -206,7 +202,7 @@ const styles = StyleSheet.create({
   },
   songContent: {
     textAlign: "center",
-    color: "#EEEEEE",
+    color: "black",
   },
   songTitle: {
     fontSize: 18,
@@ -228,9 +224,7 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     justifyContent: "space-between",
   },
-  progressLabelText: {
-    color: "#FFF",
-  },
+  progressLabelText: {},
   musicControlsContainer: {
     flexDirection: "row",
     justifyContent: "space-between",

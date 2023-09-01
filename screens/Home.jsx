@@ -1,4 +1,3 @@
-import { StatusBar } from "expo-status-bar";
 import React, { useEffect, useState } from "react";
 import {
   StyleSheet,
@@ -8,7 +7,6 @@ import {
   TouchableOpacity,
   Image,
 } from "react-native";
-import { cards } from "../data"; // cards is the data we want to display
 import Swiper from "react-native-swiper";
 import { Feather, FontAwesome5, Ionicons } from "@expo/vector-icons";
 import { useNavigation } from "@react-navigation/native";
@@ -18,6 +16,7 @@ import { ref, onValue } from "firebase/database";
 import { useDispatch } from "react-redux";
 import Card from "../components/Card";
 import MusicPlayer from "../components/TrackPlayer";
+import podcasts from "../assets/data";
 
 const pics = [
   {
@@ -47,12 +46,15 @@ const CardList = () => {
   const navigation = useNavigation();
   const [datalist, setDatalist] = useState();
   const dispatch = useDispatch();
+
   useEffect(() => {
     const dbRef = ref(db, "items/");
+
     onValue(dbRef, (snapshot) => {
       const data = snapshot.val();
       const dataList = Object.values(data);
       setDatalist(dataList);
+
       dispatch({ type: "DATA", payload: dataList });
     });
   }, []);
@@ -153,7 +155,6 @@ const CardList = () => {
             <Text style={styles.title}>Audio tour guide</Text>
             <FontAwesome5 name="headphones" size={24} color="grey" />
           </View>
-          <MusicPlayer />
 
           {datalist &&
             datalist.map(
@@ -168,6 +169,7 @@ const CardList = () => {
                     card={{ ...card, nextCard, nextIndex }}
                     index={index}
                     navigation={navigation}
+                    key={index}
                   />
                 );
               }

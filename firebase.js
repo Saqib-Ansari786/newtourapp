@@ -1,15 +1,15 @@
 import firebase from "firebase/compat/app";
 import { getDatabase } from "firebase/database";
 const firebaseConfig = {
-  apiKey: "AIzaSyDQ3Cw5LtlbmdxN6liRWqsBcJ5GXWnd9bE",
-  authDomain: "about-25a53.firebaseapp.com",
+  apiKey: "AIzaSyCJf2Aupv1P03ijw02KVstfdVZij5c2-HU",
+  authDomain: "about-guides.firebaseapp.com",
   databaseURL:
-    "https://about-25a53-default-rtdb.europe-west1.firebasedatabase.app",
-  projectId: "about-25a53",
-  storageBucket: "about-25a53.appspot.com",
-  messagingSenderId: "823829035411",
-  appId: "1:823829035411:web:4456c5d5a4703489c61066",
-  measurementId: "G-HWHSZWQPTP",
+    "https://about-guides-default-rtdb.europe-west1.firebasedatabase.app",
+  projectId: "about-guides",
+  storageBucket: "about-guides.appspot.com",
+  messagingSenderId: "350720162338",
+  appId: "1:350720162338:web:30a0d16ff1b5f68e65e87b",
+  measurementId: "G-1SBRM4GDE9",
 };
 
 if (firebase.apps.length === 0) {

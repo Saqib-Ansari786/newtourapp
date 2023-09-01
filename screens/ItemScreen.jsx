@@ -8,6 +8,7 @@ import Header from "../components/Header";
 import { cards } from "../data";
 import { useNavigation } from "@react-navigation/native";
 import { useSelector } from "react-redux";
+import MusicPlayer from "../components/TrackPlayer";
 
 export default function CardDetail({ route }) {
   const { video, title, description, id, nextCard, nextIndex, gallery, audio } =
@@ -71,7 +72,7 @@ export default function CardDetail({ route }) {
       </View>
       <LineSeparator />
       <View>
-        <AudioPlayer uri={audio} stopAudio={stopAudio} />
+        <MusicPlayer />
       </View>
       <LineSeparator />
       <View style={{ padding: 20 }}>

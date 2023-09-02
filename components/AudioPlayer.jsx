@@ -4,7 +4,7 @@ import { Audio } from "expo-av";
 import { Ionicons, MaterialCommunityIcons } from "@expo/vector-icons";
 import Slider from "@react-native-community/slider";
 
-export default function App({ uri, stopAudio }) {
+export default function App({ uri, stopAudio, id }) {
   const [audio, setAudio] = useState(null); // audio object
   const [isPlaying, setIsPlaying] = useState(false); // isPlaying state variable to check if audio is playing
   const [position, setPosition] = useState(0); // position state variable to set position of audio
@@ -28,7 +28,9 @@ export default function App({ uri, stopAudio }) {
 
     return () => {
       if (audio) {
-        setIsPlaying(false); // set isPlaying to false
+        audio.stopAsync(); // Stop audio if stopAudio is true
+        setIsPlaying(false);
+        setPosition(0);
       }
     };
   }, [uri]);
@@ -98,7 +100,7 @@ export default function App({ uri, stopAudio }) {
   };
 
   return (
-    <View style={styles.container}>
+    <View style={styles.container} key={id}>
       {/* // this button will play/pause the audio */}
       <TouchableOpacity onPress={handlePlayPause} style={{ padding: 10 }}>
         {isPlaying ? (

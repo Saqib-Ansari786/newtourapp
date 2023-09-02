@@ -72,7 +72,7 @@ export default function CardDetail({ route }) {
       </View>
       <LineSeparator />
       <View>
-        <MusicPlayer />
+        <AudioPlayer uri={audio} stopAudio={stopAudio} id={id} />
       </View>
       <LineSeparator />
       <View style={{ padding: 20 }}>
@@ -97,6 +97,7 @@ export default function CardDetail({ route }) {
             gallery: nextCard.gallery,
             nextCard: next1Card,
             nextIndex: next1Index,
+            audio: nextCard.audio,
           });
         }}
       >

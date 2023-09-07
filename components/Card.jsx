@@ -1,62 +1,13 @@
-import React, { useState } from "react";
-import {
-  View,
-  Text,
-  TouchableOpacity,
-  Image,
-  LayoutChangeEvent,
-  StyleSheet,
-} from "react-native";
+import React from "react";
+import { View, Text, TouchableOpacity, Image, StyleSheet } from "react-native";
 
 const Card = ({ card, navigation, index }) => {
-  const [isExpanded, setIsExpanded] = useState(false);
-  const [descriptionLines, setDescriptionLines] = useState(0);
-
-  const handleTextLayout = (event) => {
-    const { lines } = event.nativeEvent;
-    setDescriptionLines(lines.length);
-  };
-
-  const toggleDescription = () => {
-    setIsExpanded(!isExpanded);
-  };
-
-  const renderDescription = () => {
-    if (descriptionLines <= 3 || isExpanded) {
-      return (
-        <>
-          <Text style={styles.cardDescription} onTextLayout={handleTextLayout}>
-            {card.description}
-          </Text>
-          <TouchableOpacity onPress={toggleDescription}>
-            <Text style={styles.readMoreButton}>See less</Text>
-          </TouchableOpacity>
-        </>
-      );
-    } else {
-      return (
-        <>
-          <Text
-            style={[styles.cardDescription, styles.clampedDescription]}
-            numberOfLines={7}
-            onTextLayout={handleTextLayout}
-          >
-            {card.description}
-          </Text>
-          <TouchableOpacity onPress={toggleDescription}>
-            <Text style={styles.readMoreButton}>Read More</Text>
-          </TouchableOpacity>
-        </>
-      );
-    }
-  };
-
   return (
     <TouchableOpacity
       key={card.id}
       onPress={() =>
         navigation.navigate("CardDetail", {
-          title: card.title, // title, image, and description are the data we want to pass to the DetailScreen
+          title: card.title,
           description: card.description,
           image: card.image,
           id: card.id,
@@ -90,7 +41,9 @@ const Card = ({ card, navigation, index }) => {
             <Text style={styles.pointText}>{card.position}</Text>
           </View>
           <Text style={styles.cardTitle}>{card.title}</Text>
-          {renderDescription()}
+          <Text style={styles.cardDescription} numberOfLines={10}>
+            {card.description}
+          </Text>
         </View>
       </View>
     </TouchableOpacity>

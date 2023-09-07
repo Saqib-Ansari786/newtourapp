@@ -20,7 +20,7 @@ import Slider from "@react-native-community/slider";
 import Ionicons from "react-native-vector-icons/Ionicons";
 import podcasts from "../assets/data";
 
-function MusicPlayer() {
+function MusicPlayer({ audioUrl, stopAudio }) {
   const podcastsCount = podcasts.length;
   const [trackIndex, setTrackIndex] = useState(0);
   const [trackTitle, setTrackTitle] = useState();
@@ -98,7 +98,10 @@ function MusicPlayer() {
 
   useEffect(() => {
     setupPlayer();
-    return () => TrackPlayer.destroy();
+
+    return () => {
+      nexttrack();
+    };
   }, []);
 
   return (
@@ -234,3 +237,190 @@ const styles = StyleSheet.create({
     width: "60%",
   },
 });
+
+// import React, { useEffect, useState } from "react";
+// import {
+//   View,
+//   Text,
+//   StyleSheet,
+//   SafeAreaView,
+//   Dimensions,
+//   TouchableOpacity,
+//   Image,
+// } from "react-native";
+// import TrackPlayer, {
+//   Capability,
+//   State,
+//   Event,
+//   usePlaybackState,
+//   useProgress,
+//   useTrackPlayerEvents,
+//   AppKilledPlaybackBehavior,
+// } from "react-native-track-player";
+// import Slider from "@react-native-community/slider";
+// import Ionicons from "react-native-vector-icons/Ionicons";
+
+// function MusicPlayer({ audioUrl, stopAudio }) {
+//   const [trackTitle, setTrackTitle] = useState();
+//   const [trackArtist, setTrackArtist] = useState();
+//   const [trackArtwork, setTrackArtwork] = useState();
+
+//   const playBackState = usePlaybackState();
+//   const progress = useProgress();
+
+//   const setupPlayer = async () => {
+//     try {
+//       await TrackPlayer.setupPlayer();
+//       await TrackPlayer.updateOptions({
+//         capabilities: [Capability.Play, Capability.Pause],
+//         android: {
+//           appKilledPlaybackBehavior:
+//             AppKilledPlaybackBehavior.StopPlaybackAndRemoveNotification,
+//         },
+//       });
+//       await TrackPlayer.add({
+//         id: `${audioUrl}`,
+//         url: audioUrl,
+//         title: `${audioUrl}`,
+//         artist: "Unknown Artist",
+//         artwork: "https://example.com/placeholder.jpg", // Set a placeholder artwork URL
+//       });
+//       await TrackPlayer.play();
+//     } catch (error) {
+//       console.log(error);
+//     }
+//   };
+
+//   const togglePlayBack = async (playBackState) => {
+//     if (playBackState === State.Paused || playBackState === State.Ready) {
+//       await TrackPlayer.play();
+//     } else {
+//       await TrackPlayer.pause();
+//     }
+//   };
+
+//   useEffect(() => {
+//     if (TrackPlayer.getState() === State.Playing && stopAudio) {
+//       TrackPlayer.pause();
+//       TrackPlayer.reset();
+//       setupPlayer();
+//     } else {
+//       setupPlayer();
+//     }
+
+//     return () => {
+//       TrackPlayer.reset();
+//     };
+//   }, [audioUrl, stopAudio]);
+
+//   return (
+//     <SafeAreaView style={styles.container}>
+//       <View style={styles.mainContainer}>
+//         <View style={styles.songText}>
+//           <Text
+//             style={[styles.songContent, styles.songTitle]}
+//             numberOfLines={3}
+//           >
+//             {trackTitle}
+//           </Text>
+//           <Text
+//             style={[styles.songContent, styles.songArtist]}
+//             numberOfLines={2}
+//           >
+//             {trackArtist}
+//           </Text>
+//         </View>
+//         <View>
+//           <Slider
+//             style={styles.progressBar}
+//             value={progress.position}
+//             minimumValue={0}
+//             maximumValue={progress.duration}
+//             thumbTintColor="#FFD369"
+//             minimumTrackTintColor="black"
+//             maximumTrackTintColor="gray"
+//             onSlidingComplete={async (value) => await TrackPlayer.seekTo(value)}
+//           />
+//           <View style={styles.progressLevelDuraiton}>
+//             <Text style={styles.progressLabelText}>
+//               {new Date(progress.position * 1000)
+//                 .toLocaleTimeString()
+//                 .substring(3)}
+//             </Text>
+//             <Text style={styles.progressLabelText}>
+//               {new Date((progress.duration - progress.position) * 1000)
+//                 .toLocaleTimeString()
+//                 .substring(3)}
+//             </Text>
+//           </View>
+//         </View>
+//         <View style={styles.musicControlsContainer}>
+//           <TouchableOpacity onPress={() => togglePlayBack(playBackState)}>
+//             <Ionicons
+//               name={
+//                 playBackState === State.Playing
+//                   ? "ios-pause-circle"
+//                   : playBackState === State.Connecting
+//                   ? "ios-caret-down-circle"
+//                   : "ios-play-circle"
+//               }
+//               size={75}
+//               color="black"
+//             />
+//           </TouchableOpacity>
+//         </View>
+//       </View>
+//     </SafeAreaView>
+//   );
+// }
+
+// export default MusicPlayer;
+
+// const { width } = Dimensions.get("window");
+
+// const styles = StyleSheet.create({
+//   container: {
+//     flex: 1,
+//   },
+//   mainContainer: {
+//     alignItems: "center",
+//     justifyContent: "center",
+//   },
+//   songText: {
+//     marginTop: 2,
+//     height: 70,
+//   },
+//   songContent: {
+//     textAlign: "center",
+//     color: "black",
+//   },
+//   songTitle: {
+//     fontSize: 18,
+//     fontWeight: "600",
+//   },
+//   songArtist: {
+//     fontSize: 16,
+//     fontWeight: "300",
+//   },
+//   progressBar: {
+//     alignSelf: "stretch",
+//     marginTop: 40,
+//     marginLeft: 5,
+//     marginRight: 5,
+//   },
+//   progressLevelDuraiton: {
+//     width: width,
+//     padding: 5,
+//     flexDirection: "row",
+//     justifyContent: "space-between",
+//   },
+//   progressLabelText: {},
+//   musicControlsContainer: {
+//     flexDirection: "row",
+//     justifyContent: "space-between",
+//     alignItems: "center",
+//     marginTop: 20,
+//     marginBottom: 20,
+//     width: "60%",
+//   },
+// });

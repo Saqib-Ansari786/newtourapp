@@ -72,7 +72,7 @@ export default function CardDetail({ route }) {
       </View>
       <LineSeparator />
       <View>
-        <AudioPlayer uri={audio} stopAudio={stopAudio} id={id} />
+        <MusicPlayer audioUrl={audio} />
       </View>
       <LineSeparator />
       <View style={{ padding: 20 }}>

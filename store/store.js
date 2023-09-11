@@ -1,5 +1,5 @@
 import { configureStore } from "@reduxjs/toolkit";
-import { dataReducer } from "./reducers";
+import { audioReducer, dataReducer } from "./reducers";
 
 const store = configureStore({
   reducer: {

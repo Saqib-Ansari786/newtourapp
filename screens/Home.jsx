@@ -44,7 +44,8 @@ const pics = [
 const CardList = () => {
   // navigation is used to navigate between screens
   const navigation = useNavigation();
-  const [datalist, setDatalist] = useState();
+  const [firebasedatalist, setDatalist] = useState();
+  const [audiolist, setAudiolist] = useState([]);
   const dispatch = useDispatch();
 
   useEffect(() => {
@@ -54,11 +55,12 @@ const CardList = () => {
       const data = snapshot.val();
       const dataList = Object.values(data);
       setDatalist(dataList);
+      setAudiolist(dataList.map((item) => item.audio));
 
       dispatch({ type: "DATA", payload: dataList });
+      dispatch({ type: "AUDIO", payload: dataList.map((item) => item.audio) });
     });
   }, []);
-
   return (
     // ScrollView is used to make the content scrollable
     <View>
@@ -156,17 +158,22 @@ const CardList = () => {
             <FontAwesome5 name="headphones" size={24} color="grey" />
           </View>
 
-          {datalist &&
-            datalist.map(
+          {firebasedatalist &&
+            firebasedatalist.map(
               (
                 card,
                 index // map is used to loop through the data. Alternative for flatlist
               ) => {
-                const nextIndex = (index + 1) % datalist.length; // Calculate the index of the next object in a circular manner
-                const nextCard = datalist[nextIndex];
+                const nextIndex = (index + 1) % firebasedatalist.length; // Calculate the index of the next object in a circular manner
+                const nextCard = firebasedatalist[nextIndex];
                 return (
                   <Card
-                    card={{ ...card, nextCard, nextIndex }}
+                    card={{
+                      ...card,
+                      nextCard,
+                      nextIndex,
+                      index: index,
+                    }}
                     index={index}
                     navigation={navigation}
                     key={index}

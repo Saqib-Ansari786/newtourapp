@@ -18,10 +18,12 @@ import TrackPlayer, {
 } from "react-native-track-player";
 import Slider from "@react-native-community/slider";
 import Ionicons from "react-native-vector-icons/Ionicons";
-import podcasts from "../assets/data";
+import { useSelector } from "react-redux";
 
-function MusicPlayer({ audioUrl, stopAudio }) {
-  const podcastsCount = podcasts.length;
+function MusicPlayer({ audioUrl, stopAudio, skipto }) {
+  const { audiolist } = useSelector((state) => state.data);
+
+  const podcastsCount = audiolist.length;
   const [trackIndex, setTrackIndex] = useState(0);
   const [trackTitle, setTrackTitle] = useState();
   const [trackArtist, setTrackArtist] = useState();
@@ -29,6 +31,14 @@ function MusicPlayer({ audioUrl, stopAudio }) {
 
   const playBackState = usePlaybackState();
   const progress = useProgress();
+
+  const tracks = audiolist.map((audioUrl) => ({
+    id: audioUrl, // You can set a unique ID for each track
+    url: audioUrl,
+    title: "Your Default Title", // Set your default title here
+    artist: "Your Default Artist", // Set your default artist here
+    artwork: "URL_to_default_artwork_image", // Set a default artwork URL here
+  }));
 
   const setupPlayer = async () => {
     try {
@@ -41,7 +51,7 @@ function MusicPlayer({ audioUrl, stopAudio }) {
           Capability.SkipToPrevious,
         ],
       });
-      await TrackPlayer.add(podcasts);
+      await TrackPlayer.add(tracks);
       await gettrackdata();
       await TrackPlayer.play();
     } catch (error) {
@@ -96,13 +106,22 @@ function MusicPlayer({ audioUrl, stopAudio }) {
     }
   };
 
+  const skipTo = async (trackIndex) => {
+    if (trackIndex > 0) {
+      await TrackPlayer.skip(trackIndex);
+      gettrackdata();
+    }
+  };
+
   useEffect(() => {
     setupPlayer();
-
-    return () => {
-      nexttrack();
-    };
   }, []);
+
+  useEffect(() => {
+    if (skipto) {
+      skipTo(skipto);
+    }
+  }, [stopAudio]);
 
   return (
     <SafeAreaView style={styles.container}>

@@ -11,13 +11,15 @@ import { useSelector } from "react-redux";
 import MusicPlayer from "../components/TrackPlayer";
 
 export default function CardDetail({ route }) {
-  const { video, title, description, id, nextCard, nextIndex, gallery, audio } =
+  const { video, title, description, id, nextCard, nextIndex, gallery, index } =
     route.params; // here we are getting the data from route.params
-  const { data } = useSelector((state) => state.data);
+  const { data, audiolist } = useSelector((state) => state.data);
   const navigation = useNavigation();
   const next1Index = (nextIndex + 1) % data.length;
   const next1Card = data[next1Index];
   const [stopAudio, setStopAudio] = React.useState(false);
+
+  console.log(index);
   return (
     <ScrollView contentContainerStyle={styles.container}>
       {/* // this is the main container */}
@@ -72,7 +74,11 @@ export default function CardDetail({ route }) {
       </View>
       <LineSeparator />
       <View>
-        <MusicPlayer audioUrl={audio} />
+        <MusicPlayer
+          audioUrl={audiolist}
+          stopAudio={stopAudio}
+          skipto={index}
+        />
       </View>
       <LineSeparator />
       <View style={{ padding: 20 }}>
@@ -98,6 +104,7 @@ export default function CardDetail({ route }) {
             nextCard: next1Card,
             nextIndex: next1Index,
             audio: nextCard.audio,
+            index: next1Index,
           });
         }}
       >

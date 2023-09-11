@@ -3,9 +3,7 @@ import React from "react";
 import Swiper from "react-native-swiper";
 import { StyleSheet } from "react-native";
 import LineSeparator from "../components/LineSeparator";
-import AudioPlayer from "../components/AudioPlayer";
 import Header from "../components/Header";
-import { cards } from "../data";
 import { useNavigation } from "@react-navigation/native";
 import { useSelector } from "react-redux";
 import MusicPlayer from "../components/TrackPlayer";
@@ -19,7 +17,7 @@ export default function CardDetail({ route }) {
   const next1Card = data[next1Index];
   const [stopAudio, setStopAudio] = React.useState(false);
 
-  console.log(index);
+  console.log("audio screen index", id - 1);
   return (
     <ScrollView contentContainerStyle={styles.container}>
       {/* // this is the main container */}
@@ -77,7 +75,7 @@ export default function CardDetail({ route }) {
         <MusicPlayer
           audioUrl={audiolist}
           stopAudio={stopAudio}
-          skipto={index}
+          skipto={id - 1}
         />
       </View>
       <LineSeparator />

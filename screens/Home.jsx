@@ -15,9 +15,8 @@ import { db } from "../firebase";
 import { ref, onValue } from "firebase/database";
 import { useDispatch } from "react-redux";
 import Card from "../components/Card";
-import MusicPlayer from "../components/TrackPlayer";
-import podcasts from "../assets/data";
 
+// pics is the data we are using to display on corousel on  home screen
 const pics = [
   {
     type: "image",
@@ -157,7 +156,7 @@ const CardList = () => {
             <Text style={styles.title}>Audio tour guide</Text>
             <FontAwesome5 name="headphones" size={24} color="grey" />
           </View>
-
+          {/* // this is where we are showing firebase data */}
           {firebasedatalist &&
             firebasedatalist.map(
               (
@@ -169,14 +168,14 @@ const CardList = () => {
                 return (
                   <Card
                     card={{
-                      ...card,
-                      nextCard,
-                      nextIndex,
-                      index: index,
+                      ...card, // spread operator is used to spread the data
+                      nextCard, // nextCard is used to pass the next card data
+                      nextIndex, // nextIndex is used to pass the next index
+                      index: index, // index is used to pass the index
                     }}
-                    index={index}
-                    navigation={navigation}
-                    key={index}
+                    index={index} // index is used to identify the card
+                    navigation={navigation} // navigation is used to navigate between screens
+                    key={index} // key is used to identify the card
                   />
                 );
               }

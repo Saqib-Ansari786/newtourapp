@@ -43,30 +43,33 @@ function MusicPlayer({ audioUrl, stopAudio, skipto }) {
 
   const setupPlayer = async () => {
     try {
-      await TrackPlayer.setupPlayer();
+      await TrackPlayer.setupPlayer(); // this is where we initialize the player
       await TrackPlayer.updateOptions({
+        // this is where we set the player controls
         capabilities: [
           Capability.Play,
           Capability.Pause,
           Capability.SkipToNext,
           Capability.SkipToPrevious,
         ],
+        // An array of capabilities that will show up when the notification is in the compact form on Android
         android: {
           appKilledPlaybackBehavior:
             AppKilledPlaybackBehavior.StopPlaybackAndRemoveNotification,
         },
+        // this function Appkilled will be called when the app is closed and we want to stop the audio
       });
-      await TrackPlayer.add(tracks);
-      await gettrackdata();
-      await TrackPlayer.play();
+      await TrackPlayer.add(tracks); // add the tracks to the playlist
+      await gettrackdata(); // get the track data
+      await TrackPlayer.play(); // start playing the tracks
     } catch (error) {
       console.log(error);
     }
   };
 
   const gettrackdata = async () => {
-    let trackIndex = await TrackPlayer.getCurrentTrack();
-    let trackObject = await TrackPlayer.getTrack(trackIndex);
+    let trackIndex = await TrackPlayer.getCurrentTrack(); // get the current track
+    let trackObject = await TrackPlayer.getTrack(trackIndex); // get the current track object
     console.log(trackIndex);
     setTrackIndex(trackIndex);
     setTrackTitle(trackObject.title);
@@ -75,47 +78,53 @@ function MusicPlayer({ audioUrl, stopAudio, skipto }) {
   };
 
   const togglePlayBack = async (playBackState) => {
-    const currentTrack = await TrackPlayer.getCurrentTrack();
+    const currentTrack = await TrackPlayer.getCurrentTrack(); // this is where we get the current track
     if (currentTrack != null) {
+      // if there is a track playing at the moment
       if ((playBackState == State.Paused) | (playBackState == State.Ready)) {
-        await TrackPlayer.play();
+        // if the current state of the track is paused or ready
+        await TrackPlayer.play(); // start playing the track
       } else {
-        await TrackPlayer.pause();
+        await TrackPlayer.pause(); // else pause the track
       }
     }
   };
 
   const nexttrack = async () => {
     if (trackIndex < podcastsCount - 1) {
-      await TrackPlayer.skipToNext();
+      // if the track index is less than the total number of tracks
+      await TrackPlayer.skipToNext(); // skip to the next track
       gettrackdata();
     }
   };
 
   const previoustrack = async () => {
     if (trackIndex >= 0) {
-      await TrackPlayer.skipToPrevious();
-      gettrackdata();
+      // if the track index is greater than and equal to 0
+      await TrackPlayer.skipToPrevious(); // skip to the previous track
+      gettrackdata(); // get the track data
     }
   };
 
   const skipTo = async (trackIndex) => {
     if (trackIndex >= podcastsCount - 1) {
-      trackIndex = podcastsCount - 1;
+      // if the track index is greater than and equal to the total number of tracks
+      trackIndex = podcastsCount - 1; // set the track index to the total number of tracks
     }
 
     if (trackIndex >= 0) {
-      await TrackPlayer.skip(trackIndex);
-      gettrackdata();
+      await TrackPlayer.skip(trackIndex); // skip to the track index
+      gettrackdata(); // get the track data
     }
   };
 
   useEffect(() => {
-    setupPlayer();
+    setupPlayer(); // initialized the player first time
   }, []);
 
   useEffect(() => {
     if (skipto) {
+      // if the there is index to skip to
       skipTo(skipto);
     }
   }, [skipto]);
@@ -124,20 +133,16 @@ function MusicPlayer({ audioUrl, stopAudio, skipto }) {
     <SafeAreaView style={styles.container}>
       <View style={styles.mainContainer}>
         <View style={styles.songText}>
-          <Text
-            style={[styles.songContent, styles.songTitle]}
-            numberOfLines={3}
-          >
+          {/* // this is where we display the track data */}
+          <Text style={[styles.songContent, styles.songTitle]}>
             {trackTitle}
           </Text>
-          <Text
-            style={[styles.songContent, styles.songArtist]}
-            numberOfLines={2}
-          >
+          <Text style={[styles.songContent, styles.songArtist]}>
             {trackArtist}
           </Text>
         </View>
         <View>
+          {/* // slider to show the progress of the track */}
           <Slider
             style={styles.progressBar}
             value={progress.position}
@@ -150,12 +155,14 @@ function MusicPlayer({ audioUrl, stopAudio, skipto }) {
               await TrackPlayer.getRepeatMode()
             }
           />
+          {/* // this is where we show the current position */}
           <View style={styles.progressLevelDuraiton}>
             <Text style={styles.progressLabelText}>
               {new Date(progress.position * 1000)
                 .toLocaleTimeString()
                 .substring(3)}
             </Text>
+            {/* //  this is where we show the total duration of the track */}
             <Text style={styles.progressLabelText}>
               {new Date((progress.duration - progress.position) * 1000)
                 .toLocaleTimeString()
@@ -163,10 +170,13 @@ function MusicPlayer({ audioUrl, stopAudio, skipto }) {
             </Text>
           </View>
         </View>
+        {/* // this is where we show music controls */}
         <View style={styles.musicControlsContainer}>
+          {/* // this is the previous track button */}
           <TouchableOpacity onPress={previoustrack}>
             <Ionicons name="play-skip-back-outline" size={35} color="black" />
           </TouchableOpacity>
+          {/* // this is the play/pause button */}
           <TouchableOpacity onPress={() => togglePlayBack(playBackState)}>
             <Ionicons
               name={
@@ -180,6 +190,7 @@ function MusicPlayer({ audioUrl, stopAudio, skipto }) {
               color="black"
             />
           </TouchableOpacity>
+          {/* // this is the next track button */}
           <TouchableOpacity onPress={nexttrack}>
             <Ionicons
               name="play-skip-forward-outline"

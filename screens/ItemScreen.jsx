@@ -72,14 +72,16 @@ export default function CardDetail({ route }) {
       </View>
       <LineSeparator />
       <View>
+        {/* // this is the audio player */}
         <MusicPlayer
           audioUrl={audiolist}
           stopAudio={stopAudio}
-          skipto={id - 1}
+          skipto={id - 1} // this is the index of the audio we want to play as the id of firebase data is 1 more than the index of the audio player array
         />
       </View>
       <LineSeparator />
       <View style={{ padding: 20 }}>
+        {/* // this is the transcription section */}
         <Text style={{ fontSize: 20, fontWeight: "bold" }}>Transcription</Text>
         <Text style={{ fontSize: 16, color: "grey", marginTop: 10 }}>
           {description}

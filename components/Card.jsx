@@ -2,11 +2,14 @@ import React from "react";
 import { View, Text, TouchableOpacity, Image, StyleSheet } from "react-native";
 
 const Card = ({ card, navigation, index }) => {
+  // card is the object of the card, navigation is used to navigate between screens, index is the index of the card in the array
   return (
+    // TouchableOpacity is used to make the card clickable
     <TouchableOpacity
       key={card.id}
       onPress={() =>
         navigation.navigate("CardDetail", {
+          // navigate to the CardDetail screen and pass the card object to it
           title: card.title,
           description: card.description,
           image: card.image,
@@ -21,21 +24,21 @@ const Card = ({ card, navigation, index }) => {
       <View
         style={[
           styles.cardContainer,
-          index % 2 === 0 ? styles.rightCard : styles.leftCard,
+          index % 2 === 0 ? styles.rightCard : styles.leftCard, // if the index is even, the card will be on the right side, else it will be on the left side
         ]}
       >
         <Image
           source={{
-            uri: card.image,
+            uri: card.image, // image is the url of the image
           }}
           style={{
-            width: "50%",
-            resizeMode: "cover",
-            overflow: "hidden",
-            borderRadius: 10,
+            width: "50%", // width is used to set the width of the image
+            resizeMode: "cover", // resizeMode is used to set the image fit cover
+            overflow: "hidden", // overflow is used to hide the content that overflows the width or height of the image
+            borderRadius: 10, // borderRadius is used to give the image rounded corners
           }}
         />
-
+        {/* // this is card content which contains the title and the description */}
         <View style={styles.cardContent}>
           <View style={styles.cardPoint}>
             <Text style={styles.pointText}>{card.position}</Text>
